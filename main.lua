@@ -17,17 +17,34 @@ local Window = Rayfield:CreateWindow({
    KeySystem = false
 })
 
-local MainTab = Window:CreateTab("Main", 4483362458)
+local PlayerTab = Window:CreateTab("Player", 4483362458)
 
-local Toggle = MainTab:CreateToggle({
-   Name = "Test Toggle",
-   CurrentValue = false,
-   Flag = "TestToggle",
+local WalkSpeedSlider = PlayerTab:CreateSlider({
+   Name = "WalkSpeed",
+   Range = {16, 100},
+   Increment = 1,
+   Suffix = " Speed",
+   CurrentValue = 16,
+   Flag = "WalkSpeedSlider",
    Callback = function(Value)
-      if Value then
-         print("Toggle activated")
-      else
-         print("Toggle deactivated")
+      local Character = game.Players.LocalPlayer.Character
+      if Character and Character:FindFirstChild("Humanoid") then
+         Character.Humanoid.WalkSpeed = Value
+      end
+   end,
+})
+
+local JumpPowerSlider = PlayerTab:CreateSlider({
+   Name = "JumpPower",
+   Range = {50, 300},
+   Increment = 1,
+   Suffix = " Power",
+   CurrentValue = 50,
+   Flag = "JumpPowerSlider",
+   Callback = function(Value)
+      local Character = game.Players.LocalPlayer.Character
+      if Character and Character:FindFirstChild("Humanoid") then
+         Character.Humanoid.JumpPower = Value
       end
    end,
 })
