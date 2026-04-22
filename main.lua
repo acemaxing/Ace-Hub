@@ -8,6 +8,9 @@ local Camera = workspace.CurrentCamera
 local CrosshairGui = nil
 local TargetMarker = nil
 local RenderSteppedConnection = nil
+local LaserBeam = nil
+local CharAttachment = nil
+local TargetAttachment = nil
 
 -- Clean up any existing UI
 if PlayerGui:FindFirstChild("AceHubTP") then
@@ -101,6 +104,8 @@ Close.MouseButton1Click:Connect(function()
     if RenderSteppedConnection then RenderSteppedConnection:Disconnect() end
     if TargetMarker then TargetMarker:Destroy() end
     if CrosshairGui then CrosshairGui:Destroy() end
+    if CharAttachment then CharAttachment:Destroy() end
+    if LaserBeam then LaserBeam:Destroy() end
     ScreenGui:Destroy()
 end)
 
@@ -249,6 +254,27 @@ local function toggleFloatingTP(value)
         TargetMarker.Anchored = true
         TargetMarker.CanCollide = false
         TargetMarker.Parent = workspace
+
+        -- Laser Beam Setup
+        TargetAttachment = Instance.new("Attachment")
+        TargetAttachment.Parent = TargetMarker
+
+        local char = Player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            CharAttachment = Instance.new("Attachment")
+            CharAttachment.Parent = hrp
+
+            LaserBeam = Instance.new("Beam")
+            LaserBeam.Attachment0 = CharAttachment
+            LaserBeam.Attachment1 = TargetAttachment
+            LaserBeam.Color = ColorSequence.new(Color3.new(1, 0, 0))
+            LaserBeam.LightEmission = 1
+            LaserBeam.Width0 = 0.1
+            LaserBeam.Width1 = 0.1
+            LaserBeam.FaceCamera = true
+            LaserBeam.Parent = TargetMarker
+        end
         
         -- Raycast and Marker Update
         RenderSteppedConnection = RunService.RenderStepped:Connect(function()
@@ -264,8 +290,10 @@ local function toggleFloatingTP(value)
             if raycastResult then
                 TargetMarker.Position = raycastResult.Position
                 TargetMarker.Visible = true
+                if LaserBeam then LaserBeam.Enabled = true end
             else
                 TargetMarker.Visible = false
+                if LaserBeam then LaserBeam.Enabled = false end
             end
         end)
         
@@ -282,6 +310,9 @@ local function toggleFloatingTP(value)
         if CrosshairGui then CrosshairGui:Destroy() CrosshairGui = nil end
         if TargetMarker then TargetMarker:Destroy() TargetMarker = nil end
         if RenderSteppedConnection then RenderSteppedConnection:Disconnect() RenderSteppedConnection = nil end
+        if CharAttachment then CharAttachment:Destroy() CharAttachment = nil end
+        if LaserBeam then LaserBeam:Destroy() LaserBeam = nil end
+        if TargetAttachment then TargetAttachment:Destroy() TargetAttachment = nil end
     end
 end
 
