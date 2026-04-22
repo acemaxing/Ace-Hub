@@ -1,4 +1,4 @@
--- Custom UI for Ace Hub - Fisch (Safe & Fast)
+-- Custom UI for Ace Hub - Fisch (Safe, Fast & Minimizable)
 local Player = game.Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
@@ -40,6 +40,58 @@ Title.Parent = MainFrame
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 8)
 TitleCorner.Parent = Title
+
+-- Minimize Button (-)
+local Minimize = Instance.new("TextButton")
+Minimize.Size = UDim2.new(0, 25, 0, 25)
+Minimize.Position = UDim2.new(1, -55, 0, 2)
+Minimize.BackgroundTransparency = 1
+Minimize.Text = "-"
+Minimize.TextColor3 = Color3.fromRGB(200, 200, 200)
+Minimize.Font = Enum.Font.SourceSansBold
+Minimize.TextSize = 25
+Minimize.Parent = MainFrame
+
+-- Restore Button (Invisible until minimized)
+local Restore = Instance.new("TextButton")
+Restore.Name = "RestoreButton"
+Restore.Size = UDim2.new(0, 50, 0, 30)
+Restore.Position = UDim2.new(0, 10, 0, 10)
+Restore.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Restore.Text = "Ace"
+Restore.TextColor3 = Color3.fromRGB(255, 255, 255)
+Restore.Font = Enum.Font.SourceSansBold
+Restore.Visible = false
+Restore.Parent = ScreenGui
+
+local RestoreCorner = Instance.new("UICorner")
+RestoreCorner.CornerRadius = UDim.new(0, 6)
+RestoreCorner.Parent = Restore
+
+Minimize.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    Restore.Visible = true
+end)
+
+Restore.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+    Restore.Visible = false
+end)
+
+-- Close Button (X)
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 25, 0, 25)
+Close.Position = UDim2.new(1, -30, 0, 2)
+Close.BackgroundTransparency = 1
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 50, 50)
+Close.Font = Enum.Font.SourceSansBold
+Close.TextSize = 20
+Close.Parent = MainFrame
+
+Close.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
 
 -- Input Styling Helper
 local function createInput(name, pos, placeholder)
@@ -95,19 +147,4 @@ TP_Button.MouseButton1Click:Connect(function()
             hrp.CFrame = CFrame.new(x, y, z)
         end
     end
-end)
-
--- Close Button
-local Close = Instance.new("TextButton")
-Close.Size = UDim2.new(0, 25, 0, 25)
-Close.Position = UDim2.new(1, -30, 0, 2)
-Close.BackgroundTransparency = 1
-Close.Text = "X"
-Close.TextColor3 = Color3.fromRGB(255, 50, 50)
-Close.Font = Enum.Font.SourceSansBold
-Close.TextSize = 20
-Close.Parent = MainFrame
-
-Close.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
 end)
